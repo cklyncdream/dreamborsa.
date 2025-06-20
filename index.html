@@ -3,35 +3,34 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Canlı Para Birimleri ve Hisse Arama Motoru</title>
+<title>Canlı Borsa ve Döviz Dashboard</title>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <link rel="stylesheet" href="index.css" />
 </head>
 <body>
+  <header>
+    <h1>Canlı Borsa & Döviz Takip</h1>
+  </header>
 
-<div class="container">
-  <h1>Canlı Para Birimleri, Bitcoin ve Hisse Arama Motoru</h1>
+  <main>
+    <section id="live-data" class="panel">
+      <h2>Anlık Fiyatlar</h2>
+      <div id="currency-list"></div>
+    </section>
 
-  <input
-    type="text"
-    id="searchBox"
-    placeholder="Arama yapın... Örn: Bitcoin, USD, Apple"
-    autocomplete="off"
-  />
+    <section id="chart-section" class="panel">
+      <h2>Grafik</h2>
+      <canvas id="priceChart" width="400" height="300"></canvas>
+    </section>
 
-  <div id="time"></div>
-
-  <table id="dataTable">
-    <thead>
-      <tr>
-        <th>Simge</th>
-        <th>İsim</th>
-        <th>Fiyat (₺ veya USD)</th>
-        <th>Değişim</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-  </table>
-</div>
+    <section id="summary-section" class="panel">
+      <h2>Detaylı Bilgi</h2>
+      <div id="summary-text"></div>
+    </section>
+  </main>
 
 <script src="index.js"></script>
 </body>
