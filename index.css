@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #121212;
+  color: #eee;
+  font-family: 'Roboto', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  background: #1f1f1f;
+  border-radius: 12px;
+  padding: 25px 30px 40px 30px;
+  box-shadow: 0 0 20px rgba(0, 255, 128, 0.2);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #00ff90;
+  text-shadow: 0 0 6px #00ff90;
+  user-select: none;
+}
+
+#searchBox {
+  width: 100%;
+  padding: 15px 18px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  margin-bottom: 25px;
+  background: #292929;
+  color: #00ff90;
+  box-shadow: inset 0 0 10px #00ff90;
+  transition: background 0.3s ease;
+}
+
+#searchBox::placeholder {
+  color: #00ff90aa;
+}
+
+#searchBox:focus {
+  background: #383838;
+  box-shadow: 0 0 15px #00ff90;
+}
+
+#time {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #00ff90aa;
+  user-select: none;
+  letter-spacing: 1.2px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  user-select: none;
+}
+
+thead tr {
+  background: #00ff90;
+  color: #121212;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 0 10px #00ff90cc;
+}
+
+thead tr th {
+  padding: 15px 12px;
+}
+
+tbody tr {
+  border-bottom: 1px solid #222;
+  transition: background-color 0.3s ease;
+}
+
+tbody tr:hover {
+  background-color: #00330044;
+}
+
+tbody tr td {
+  padding: 14px 10px;
+  font-size: 15px;
+  letter-spacing: 0.8px;
+}
+
+.green {
+  color: #00ff90;
+  font-weight: 700;
+  text-shadow: 0 0 6px #00ff90;
+}
+
+.red {
+  color: #ff3b3b;
+  font-weight: 700;
+  text-shadow: 0 0 8px #ff3b3b;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 20px 10px;
+  }
+  .container {
+    padding: 20px 15px 30px 15px;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  #searchBox {
+    font-size: 16px;
+    padding: 12px 15px;
+  }
+  thead tr th,
+  tbody tr td {
+    font-size: 13px;
+    padding: 10px 6px;
+  }
+}

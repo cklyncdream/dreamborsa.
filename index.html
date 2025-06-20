@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Canlı Para Birimleri ve Hisse Arama Motoru</title>
+<link rel="stylesheet" href="index.css" />
+</head>
+<body>
+
+<div class="container">
+  <h1>Canlı Para Birimleri, Bitcoin ve Hisse Arama Motoru</h1>
+
+  <input
+    type="text"
+    id="searchBox"
+    placeholder="Arama yapın... Örn: Bitcoin, USD, Apple"
+    autocomplete="off"
+  />
+
+  <div id="time"></div>
+
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Simge</th>
+        <th>İsim</th>
+        <th>Fiyat (₺ veya USD)</th>
+        <th>Değişim</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>
