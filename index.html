@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Canlı Borsa ve Döviz Dashboard</title>
+<title>Canlı Döviz & Borsa Takip Paneli</title>
 
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,23 +12,24 @@
 </head>
 <body>
   <header>
-    <h1>Canlı Borsa & Döviz Takip</h1>
+    <h1>Canlı Döviz & Borsa Takip Paneli</h1>
+    <div id="current-time"></div>
   </header>
 
   <main>
-    <section id="live-data" class="panel">
-      <h2>Anlık Fiyatlar</h2>
-      <div id="currency-list"></div>
+    <section id="live-list" class="panel">
+      <h2>Anlık Veriler</h2>
+      <div id="currency-list" role="list" aria-label="Para birimleri ve hisseler listesi"></div>
     </section>
 
-    <section id="chart-section" class="panel">
-      <h2>Grafik</h2>
-      <canvas id="priceChart" width="400" height="300"></canvas>
+    <section id="chart-panel" class="panel">
+      <h2>Fiyat Grafiği</h2>
+      <canvas id="priceChart" aria-label="Fiyat grafik alanı" role="img"></canvas>
     </section>
 
-    <section id="summary-section" class="panel">
+    <section id="info-panel" class="panel">
       <h2>Detaylı Bilgi</h2>
-      <div id="summary-text"></div>
+      <div id="info-text" tabindex="0"></div>
     </section>
   </main>
 
