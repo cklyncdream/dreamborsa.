@@ -1,102 +1,139 @@
-// Veri kümesi - Para birimleri, Bitcoin, hisse senetleri
-const data = [
-  { symbol: "BTC", name: "Bitcoin", price: 410000, change: 0 },
-  { symbol: "ETH", name: "Ethereum", price: 28000, change: 0 },
-  { symbol: "USD", name: "ABD Doları", price: 27.50, change: 0 },
-  { symbol: "EUR", name: "Euro", price: 29.20, change: 0 },
-  { symbol: "TRY", name: "Türk Lirası", price: 1, change: 0 },
-  { symbol: "GBP", name: "İngiliz Sterlini", price: 33.40, change: 0 },
-  { symbol: "XAU", name: "Altın (gram)", price: 1900, change: 0 },
-  { symbol: "AAPL", name: "Apple Inc.", price: 168, change: 0 },
-  { symbol: "TSLA", name: "Tesla Inc.", price: 720, change: 0 },
-  { symbol: "MSFT", name: "Microsoft Corp.", price: 330, change: 0 },
-  { symbol: "GOOGL", name: "Alphabet Inc.", price: 2800, change: 0 },
-  { symbol: "AMZN", name: "Amazon.com Inc.", price: 3500, change: 0 },
-  { symbol: "DOGE", name: "Dogecoin", price: 1.15, change: 0 },
-  { symbol: "XRP", name: "Ripple", price: 5.25, change: 0 },
-  { symbol: "USDTRY", name: "Dolar / Türk Lirası", price: 27.50, change: 0 },
-  { symbol: "EURUSD", name: "Euro / ABD Doları", price: 1.06, change: 0 },
+// Örnek para birimleri/hisse verisi (saniyede güncellenecek simülasyon)
+const items = [
+  { name: "Bitcoin (BTC)", symbol: "BTC", price: 30000, lastPrices: [] },
+  { name: "Ethereum (ETH)", symbol: "ETH", price: 1800, lastPrices: [] },
+  { name: "ABD Doları (USD)", symbol: "USD", price: 1, lastPrices: [] },
+  { name: "Euro (EUR)", symbol: "EUR", price: 1.1, lastPrices: [] },
+  { name: "BIST 100", symbol: "BIST", price: 2000, lastPrices: [] },
+  { name: "Tesla (TSLA)", symbol: "TSLA", price: 650, lastPrices: [] },
 ];
 
-// İstanbul saatine göre güncel saat göstergesi
-function updateTime() {
-  const options = {
-    timeZone: "Europe/Istanbul",
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  };
-  const now = new Date().toLocaleString("tr-TR", options);
-  document.getElementById("time").innerText = "Güncel Saat (İstanbul): " + now;
-}
+// Anlık fiyat güncellemesi simülasyonu
+function updatePrices() {
+  items.forEach(item => {
+    // Fiyat değişimini -2% ile +2% arası random yapıyoruz
+    const changePercent = (Math.random() * 4) - 2;
+    const changeAmount = item.price * (changePercent / 100);
+    const newPrice = +(item.price + changeAmount).toFixed(2);
 
-// Rastgele fiyat değişimi simülasyonu
-function simulatePriceChange() {
-  data.forEach((item) => {
-    // Fiyatı değiştir, -%0.5 ile +%0.5 arasında rastgele
-    const maxChangePercent = 0.005;
-    const randomFactor = (Math.random() * 2 - 1) * maxChangePercent;
-    const oldPrice = item.price;
-    const newPrice = oldPrice * (1 + randomFactor);
+    // Değişim miktarı ve yüzdeyi kaydet
+    item.change = newPrice - item.price;
+    item.changePercent = ((item.change / item.price) * 100).toFixed(2);
+    item.price = newPrice;
 
-    item.change = newPrice - oldPrice;
-    item.price = parseFloat(newPrice.toFixed(4));
+    // Son fiyatlar dizisini 20 elemanla sınırlayalım grafik için
+    item.lastPrices.push(item.price);
+    if(item.lastPrices.length > 20) item.lastPrices.shift();
   });
 }
 
-// Tabloyu güncelle
-function updateTable(filter = "") {
-  const tbody = document.getElementById("tableBody");
-  tbody.innerHTML = "";
+// HTML’ye fiyatları yazdır
+function renderPrices() {
+  const container = document.getElementById("currency-list");
+  container.innerHTML = "";
 
-  // Arama metnini küçült
-  filter = filter.toLowerCase();
+  items.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "currency-item";
 
-  data.forEach((item) => {
-    if (
-      item.symbol.toLowerCase().includes(filter) ||
-      item.name.toLowerCase().includes(filter)
-    ) {
-      const tr = document.createElement("tr");
+    const nameDiv = document.createElement("div");
+    nameDiv.className = "currency-name";
+    nameDiv.textContent = item.name;
 
-      const priceCell = document.createElement("td");
-      priceCell.textContent =
-        item.symbol === "XAU" ? item.price.toFixed(2) + " ₺" : item.price;
+    const priceDiv = document.createElement("div");
+    priceDiv.className = "currency-price";
+    priceDiv.textContent = item.price.toFixed(2);
 
-      const changeCell = document.createElement("td");
-      changeCell.textContent =
-        (item.change >= 0 ? "+" : "") + item.change.toFixed(4);
+    const changeDiv = document.createElement("div");
+    changeDiv.className = "currency-change";
+    changeDiv.textContent = `${item.change >= 0 ? "+" : ""}${item.changePercent}%`;
+    changeDiv.classList.add(item.change >= 0 ? "change-up" : "change-down");
 
-      if (item.change > 0) changeCell.classList.add("green");
-      else if (item.change < 0) changeCell.classList.add("red");
+    div.appendChild(nameDiv);
+    div.appendChild(priceDiv);
+    div.appendChild(changeDiv);
 
-      tr.innerHTML = `<td>${item.symbol}</td><td>${item.name}</td>`;
-      tr.appendChild(priceCell);
-      tr.appendChild(changeCell);
+    // Tıklanınca grafik güncellensin
+    div.addEventListener("click", () => {
+      updateChart(item);
+      updateSummary(item);
+    });
 
-      tbody.appendChild(tr);
+    container.appendChild(div);
+  });
+}
+
+// Grafik için Chart.js ayarları ve güncelleme
+const ctx = document.getElementById("priceChart").getContext("2d");
+let priceChart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: Array(20).fill(""),
+    datasets: [{
+      label: "",
+      data: [],
+      borderColor: "green",
+      backgroundColor: "rgba(0,255,0,0.1)",
+      fill: true,
+      tension: 0.25,
+      pointRadius: 0,
+    }]
+  },
+  options: {
+    animation: false,
+    responsive: true,
+    scales: {
+      y: { beginAtZero: false },
+      x: { display: false }
+    },
+    plugins: {
+      legend: { display: false }
     }
-  });
-}
-
-// Arama kutusu dinleme
-const searchBox = document.getElementById("searchBox");
-searchBox.addEventListener("input", () => {
-  updateTable(searchBox.value);
+  }
 });
 
-// Her saniye fiyatları simüle et ve tabloyu güncelle
+// Grafik verisini güncelle
+function updateChart(item) {
+  priceChart.data.datasets[0].label = item.name;
+  priceChart.data.datasets[0].data = item.lastPrices;
+  // Renk değişimi (pozitifse yeşil, negatifse kırmızı)
+  const lastChange = item.change;
+  priceChart.data.datasets[0].borderColor = lastChange >= 0 ? "green" : "red";
+  priceChart.data.datasets[0].backgroundColor = lastChange >= 0 ? "rgba(0,255,0,0.15)" : "rgba(255,0,0,0.15)";
+  priceChart.update();
+}
+
+// Yazılı özet güncelle
+function updateSummary(item) {
+  const summary = document.getElementById("summary-text");
+  summary.innerHTML = `
+    <strong>${item.name} (${item.symbol})</strong><br/>
+    Şu anki fiyat: <strong>${item.price.toFixed(2)}</strong><br/>
+    Değişim: <span class="${item.change >= 0 ? 'change-up' : 'change-down'}">
+    ${item.change >= 0 ? '+' : ''}${item.change.toFixed(2)} (${item.changePercent}%)</span><br/>
+    Son 20 saniyede fiyat hareketleri görsel grafik olarak sağda gösterilmektedir.
+  `;
+}
+
+// Başlangıç: Fiyatları güncelle, yazdır ve ilk grafiği göster
+function init() {
+  updatePrices();
+  renderPrices();
+  updateChart(items[0]);
+  updateSummary(items[0]);
+}
+
+// Her saniye fiyatları güncelle ve ekranda göster
 setInterval(() => {
-  simulatePriceChange();
-  updateTable(searchBox.value);
-  updateTime();
+  updatePrices();
+  renderPrices();
+  // Eğer grafik için seçilen ürün varsa onu güncelle
+  if(priceChart.data.datasets[0].label) {
+    const selected = items.find(i => i.name === priceChart.data.datasets[0].label);
+    if(selected) updateChart(selected);
+    updateSummary(selected);
+  }
 }, 1000);
 
-// İlk yükleme
-simulatePriceChange();
-updateTable();
-updateTime();
+// Başlat
+init();
